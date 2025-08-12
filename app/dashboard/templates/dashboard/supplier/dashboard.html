@@ -1,0 +1,61 @@
+{% extends "dashboard/supplier/base_dashboard.html" %}
+{% set active_page = 'dashboard' %}
+
+{% block page_title %}Supplier Dashboard{% endblock %}
+
+{% block dashboard_content %}
+
+<div class="row">
+  <!-- Verification Status Card -->
+  <div class="col-md-6 mb-3">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Verification Status</h5>
+        <p class="card-text">
+          {% if current_user.supplier.is_verified %}
+            Verified ✅
+          {% else %}
+            Not Verified ❌
+          {% endif %}
+        </p>
+        <a href="#" class="btn btn-outline-success btn-sm">View Details</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Products Summary Card -->
+  <div class="col-md-6 mb-3">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">My Products</h5>
+        <p class="card-text">You currently have X products listed.</p>
+        <a href="#" class="btn btn-success btn-sm">Manage Products</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <!-- Orders Summary Card -->
+  <div class="col-md-6 mb-3">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Recent Orders</h5>
+        <p class="card-text">You have Y new orders this week.</p>
+        <a href="#" class="btn btn-success btn-sm">View Orders</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Business Profile Card -->
+  <div class="col-md-6 mb-3">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Business Profile</h5>
+        <p class="card-text">{{ current_user.supplier.business_name }}</p>
+        <a href="#" class="btn btn-outline-success btn-sm">Edit Profile</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block page_title %}ASEARA – Shop Southeast Asia{% endblock %}
+
+{% block page_body %}
+<div class="container mt-4">
+
+  <!-- Hero + Search -->
+  <div class="p-4 p-md-5 mb-4 bg-light rounded-3">
+    <div class="container-fluid py-3">
+      <h1 class="display-6 fw-semibold">Discover authentic goods from Southeast Asia</h1>
+      <p class="text-muted mb-3">Verified local suppliers • Cross-border friendly</p>
+      <form class="row g-2" action="{{ url_for('catalog.search') }}" method="get">
+        <div class="col-md-8">
+          <input class="form-control form-control-lg" name="q" placeholder="Try “mango snacks” or “batik shirt”">
+        </div>
+        <div class="col-md-3">
+          <select class="form-select form-select-lg" name="country">
+            <option value="">All countries</option>
+            {% for c in countries %}
+              <option value="{{ c.code }}">{{ c.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-1 d-grid">
+          <button class="btn btn-primary btn-lg">Search</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Countries -->
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <h5 class="mb-0">Shop by Country</h5>
+    <a href="{{ url_for('catalog.search') }}" class="small text-muted">View all</a>
+  </div>
+  <div class="row row-cols-2 row-cols-sm-3 row-cols-md-6 g-3 mb-4">
+    {% for c in countries %}
+    <div class="col">
+      <a class="text-decoration-none" href="{{ url_for('catalog.country', country=c.code) }}">
+        <div class="card h-100 text-center">
+          <div class="card-body">
+            <div class="mb-2">
+              <img src="{{ url_for('static', filename='img/flags/' ~ c.code ~ '.svg') }}"
+                   alt="{{ c.name }} flag" style="height:28px">
+            </div>
+            <div class="fw-semibold">{{ c.name }}</div>
+          </div>
+        </div>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Popular categories -->
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <h5 class="mb-0">Popular Categories</h5>
+    <a href="{{ url_for('catalog.search') }}" class="small text-muted">Browse all</a>
+  </div>
+  <div class="row row-cols-2 row-cols-sm-3 row-cols-md-6 g-3 mb-4">
+    {% for cat in categories %}
+    <div class="col">
+      <!-- No global category route yet; send to search with category param -->
+      <a class="text-decoration-none" href="{{ url_for('catalog.search', category=cat.slug) }}">
+        <div class="card h-100 text-center">
+          <div class="card-body">
+            <div class="mb-2">{{ cat.emoji }}</div>
+            <div class="fw-semibold">{{ cat.name }}</div>
+          </div>
+        </div>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Featured products -->
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <h5 class="mb-0">Trending This Week</h5>
+    <a href="{{ url_for('catalog.search', sort='newest') }}" class="small text-muted">See more</a>
+  </div>
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
+    {% for p in featured_products %}
+    <div class="col">
+      <div class="card h-100">
+        {% if p.image_path %}
+          <img src="{{ url_for('static', filename='uploads/products/' ~ p.image_path) }}" class="card-img-top" alt="{{ p.name }}">
+        {% endif %}
+        <div class="card-body">
+          <h6 class="card-title text-truncate">{{ p.name }}</h6>
+          <div class="small text-muted">{{ (p.supplier.country or '')|title }}</div>
+        </div>
+        <div class="card-footer d-flex justify-content-between align-items-center">
+          <span class="fw-semibold">RM {{ '%.2f'|format(p.price) }}</span>
+          <a class="btn btn-sm btn-outline-primary" href="#">View</a>
+          {# Replace '#' with url_for('catalog.product_detail', product_id=p.id) once you add that route #}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Trust strip -->
+  <div class="bg-body-tertiary rounded-3 mt-5 p-3 text-center text-muted">
+    Vendors are verified by our local teams in Southeast Asia. Secure checkout. Cross-border shipping support.
+  </div>
+
+</div>
+{% endblock %}

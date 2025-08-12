@@ -1,0 +1,92 @@
+{% extends "dashboard/supplier/base_dashboard.html" %}
+
+{% block page_title %}My Products{% endblock %}
+
+{% block dashboard_content %}
+<h3>My Products</h3>
+<hr>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div class="text-muted">
+    {% if products.total == 0 %}
+      You haven't added any products yet.
+    {% else %}
+      Showing {{ products.items|length }} of {{ products.total }} products
+    {% endif %}
+  </div>
+  <a href="{{ url_for('dashboard.add_product') }}" class="btn btn-success btn-sm">+ Add Product</a>
+</div>
+
+{% if products.total > 0 %}
+<div class="table-responsive">
+  <table class="table table-hover align-middle">
+    <thead class="table-light">
+      <tr>
+        <th>Name</th>
+        <th class="text-end">Price</th>
+        <th class="text-end">Stock</th>
+        <th>Status</th>
+        <th>Added</th>
+        <th class="text-end">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in products.items %}
+      <tr>
+        <td>
+          <div class="fw-semibold">{{ p.name }}</div>
+          <div class="text-muted small">
+            {% if p.description %}{{ p.description[:70] }}{% if p.description|length > 70 %}…{% endif %}{% else %}<em>No description</em>{% endif %}
+          </div>
+        </td>
+        <td class="text-end">RM {{ '%.2f'|format(p.price) }}</td>
+        <td class="text-end">{{ p.stock }}</td>
+        <td>
+          {% if p.is_active %}
+            <span class="badge bg-success">Live</span>
+          {% else %}
+            {% if current_user.supplier.is_verified %}
+              <span class="badge bg-secondary">Unpublished</span>
+            {% else %}
+              <span class="badge bg-warning text-dark">Pending Verification</span>
+            {% endif %}
+          {% endif %}
+        </td>
+        <td>{{ p.date_added.strftime('%Y-%m-%d') if p.date_added }}</td>
+        <td class="text-end">
+          <div class="d-inline-flex gap-2">
+            <a href="#" class="btn btn-outline-success btn-sm disabled" title="Edit (coming soon)">Edit</a>
+
+            <form method="POST" action="{{ url_for('dashboard.supplier_product_toggle', product_id=p.id) }}" class="d-inline">
+              <button type="submit" class="btn btn-sm {% if p.is_active %}btn-outline-secondary{% else %}btn-success{% endif %}">
+                {% if p.is_active %}Unpublish{% else %}Publish{% endif %}
+              </button>
+            </form>
+
+            <form method="POST" action="{{ url_for('dashboard.supplier_product_delete', product_id=p.id) }}" class="d-inline"
+                  onsubmit="return confirm('Delete this product? This cannot be undone.');">
+              <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- Pagination -->
+<nav aria-label="Products pagination">
+  <ul class="pagination justify-content-end">
+    <li class="page-item {% if not products.has_prev %}disabled{% endif %}">
+      <a class="page-link" href="{{ url_for('dashboard.supplier_products', page=products.prev_num) }}">Previous</a>
+    </li>
+    <li class="page-item disabled"><span class="page-link">Page {{ products.page }} / {{ products.pages }}</span></li>
+    <li class="page-item {% if not products.has_next %}disabled{% endif %}">
+      <a class="page-link" href="{{ url_for('dashboard.supplier_products', page=products.next_num) }}">Next</a>
+    </li>
+  </ul>
+</nav>
+{% endif %}
+
+{% endblock %}

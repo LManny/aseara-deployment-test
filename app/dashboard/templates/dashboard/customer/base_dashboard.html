@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block page_title %}Dashboard{% endblock %}
+
+{% block page_body %}
+<div class="container-fluid mt-4">
+  <div class="row">
+    <!-- Sidebar -->
+    <div class="col-md-3">
+      <div class="list-group">
+        <a href="{{ url_for('dashboard.customer_dashboard') }}" class="list-group-item list-group-item-action {% if active_page == 'dashboard' %}active{% endif %}">Dashboard</a>
+        <a href="{{ url_for('dashboard.customer_profile') }}" class="list-group-item list-group-item-action {% if active_page == 'profile' %}active{% endif %}">Profile</a>
+        <a href="#" class="list-group-item list-group-item-action {% if active_page == 'orders' %}active{% endif %}">My Orders</a>
+        <a href="#" class="list-group-item list-group-item-action {% if active_page == 'addresses' %}active{% endif %}">Addresses</a>
+        <a href="#" class="list-group-item list-group-item-action {% if active_page == 'payments' %}active{% endif %}">Payment Methods</a>
+        <a href="#" class="list-group-item list-group-item-action {% if active_page == 'settings' %}active{% endif %}">Account Settings</a>
+        <a href="{{ url_for('auth.logout') }}" class="list-group-item list-group-item-action">Logout</a>
+      </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="col-md-9">
+
+      {% if active_page == 'dashboard' %}
+      <h3>Welcome, {{ current_user.first_name }}</h3>
+      <hr>
+      {% endif %}
+
+      {% if not current_user.customer.profile_complete %}
+      <div class="alert alert-warning d-flex justify-content-between align-items-center" role="alert">
+        <div>
+          <strong>Your profile is incomplete.</strong> Please complete it to unlock full access.
+        </div>
+        {% if not active_page == 'profile' %}
+        <a href="{{ url_for('dashboard.customer_profile') }}" class="btn btn-sm btn-primary">Complete Now</a>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      {% block dashboard_content %}{% endblock %}
+    </div>
+  </div>
+</div>
+{% endblock %}

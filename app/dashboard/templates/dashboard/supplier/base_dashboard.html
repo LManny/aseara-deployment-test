@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block page_title %}Supplier Dashboard{% endblock %}
+
+{% block page_body %}
+<div class="container-fluid mt-4">
+  <div class="row">
+    
+    <!-- Sidebar -->
+    <div class="col-md-3">
+      <div class="list-group">
+        <a href="{{ url_for('dashboard.supplier_dashboard') }}" class="list-group-item list-group-item-action {% if request.endpoint == 'dashboard.supplier_dashboard' %}active bg-success border-success text-white{% endif %}">Dashboard</a>
+        <a href="{{ url_for('dashboard.supplier_verification') }}" class="list-group-item list-group-item-action {% if request.endpoint == 'dashboard.supplier_verification' %}active bg-success border-success text-white{% endif %}">Verification</a>
+        <a href="{{ url_for('dashboard.supplier_products') }}" class="list-group-item list-group-item-action">My Products</a>
+        <a href="{{ url_for('dashboard.add_product') }}" class="list-group-item list-group-item-action">Add Product</a>
+        <a href="#" class="list-group-item list-group-item-action">Orders</a>
+        <hr>
+        <a href="#" class="list-group-item list-group-item-action">Business Profile</a>
+        <a href="#" class="list-group-item list-group-item-action">Account Settings</a>
+        <a href="{{ url_for('auth.logout') }}" class="list-group-item list-group-item-action">Logout</a>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-md-9">
+
+      {% if active_page == 'dashboard' %}
+      <h3>Welcome, {{ current_user.first_name }}</h3>
+      <hr>
+      {% endif %}
+
+      <!-- Verification Banner -->
+      {% if not current_user.supplier.profile_complete %}
+      <div class="alert alert-warning d-flex justify-content-between align-items-center" role="alert">
+        <div>
+          <strong>Your profile is incomplete.</strong> Please complete your verification to start selling.
+        </div>
+        <a href="{{ url_for('dashboard.supplier_verification') }}" class="btn btn-sm btn-success">Complete Now</a>
+      </div>
+      {% endif %}
+
+      <!-- Page-specific content goes below -->
+      {% block dashboard_content %}{% endblock %}
+    </div>
+
+  </div>
+</div>
+{% endblock %}

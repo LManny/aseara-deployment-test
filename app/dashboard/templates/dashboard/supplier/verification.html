@@ -1,0 +1,88 @@
+{% extends "dashboard/supplier/base_dashboard.html" %}
+{% set active_page = 'verification' %} <!-- Let's double check that the naming doesn't result in collisions -->
+
+{% block page_title %}Supplier Verification{% endblock %}
+
+{% block dashboard_content %}
+<h3>Verification Form</h3>
+<hr>
+
+<form method="POST" enctype="multipart/form-data">
+  {{ form.hidden_tag() }}
+
+  <!-- Business Details -->
+  <h5 class="mt-4">Business Details</h5>
+  <div class="row">
+    <div class="col-md-6 mb-3">{{ form.business_name.label }} {{ form.business_name(class="form-control") }}</div>
+    <div class="col-md-6 mb-3">{{ form.company_registration_number.label }} {{ form.company_registration_number(class="form-control") }}</div>
+    <div class="col-md-6 mb-3">{{ form.nature_of_business.label }} {{ form.nature_of_business(class="form-control") }}</div>
+    <div class="col-md-6 mb-3">{{ form.tax_id_number.label }} {{ form.tax_id_number(class="form-control") }}</div>
+  </div>
+
+  <!-- Director Info -->
+  <h5 class="mt-4">Director Information</h5>
+  <div class="row">
+    <div class="col-md-6 mb-3">{{ form.director_name.label }} {{ form.director_name(class="form-control") }}</div>
+  </div>
+
+  <!-- Primary Contact -->
+  <h5 class="mt-4">Primary Contact Person</h5>
+  <div class="row">
+    <div class="col-md-6 mb-3">{{ form.contact_name.label }} {{ form.contact_name(class="form-control") }}</div>
+    <div class="col-md-6 mb-3">{{ form.contact_designation.label }} {{ form.contact_designation(class="form-control") }}</div>
+    <div class="col-md-6 mb-3">{{ form.contact_email.label }} {{ form.contact_email(class="form-control") }}</div>
+    <div class="col-md-6 mb-3">{{ form.contact_phone.label }} {{ form.contact_phone(class="form-control") }}</div>
+  </div>
+
+  <!-- Alternate Contact -->
+  <h5 class="mt-4">Alternate Contact Person</h5>
+  <div class="row">
+    <div class="col-md-6 mb-3">{{ form.alt_contact_name.label }} {{ form.alt_contact_name(class="form-control") }}</div>
+    <div class="col-md-6 mb-3">{{ form.alt_contact_designation.label }} {{ form.alt_contact_designation(class="form-control") }}</div>
+    <div class="col-md-6 mb-3">{{ form.alt_contact_email.label }} {{ form.alt_contact_email(class="form-control") }}</div>
+    <div class="col-md-6 mb-3">{{ form.alt_contact_phone.label }} {{ form.alt_contact_phone(class="form-control") }}</div>
+  </div>
+
+  <!-- Registered Address -->
+  <h5 class="mt-4">Registered Address</h5>
+  <div class="row">
+    <div class="col-md-6 mb-3">{{ form.reg_address_line1.label }} {{ form.reg_address_line1(class="form-control") }}</div>
+    <div class="col-md-6 mb-3">{{ form.reg_address_line2.label }} {{ form.reg_address_line2(class="form-control") }}</div>
+    <div class="col-md-4 mb-3">{{ form.reg_city.label }} {{ form.reg_city(class="form-control") }}</div>
+    <div class="col-md-4 mb-3">{{ form.reg_state.label }} {{ form.reg_state(class="form-control") }}</div>
+    <div class="col-md-2 mb-3">{{ form.reg_postcode.label }} {{ form.reg_postcode(class="form-control") }}</div>
+    <div class="col-md-2 mb-3">{{ form.reg_country.label }} {{ form.reg_country(class="form-control") }}</div>
+  </div>
+
+  <!-- Operational Address -->
+  <h5 class="mt-4">Operational Address</h5>
+  <div class="row">
+    <div class="col-md-6 mb-3">{{ form.op_address_line1.label }} {{ form.op_address_line1(class="form-control") }}</div>
+    <div class="col-md-6 mb-3">{{ form.op_address_line2.label }} {{ form.op_address_line2(class="form-control") }}</div>
+    <div class="col-md-4 mb-3">{{ form.op_city.label }} {{ form.op_city(class="form-control") }}</div>
+    <div class="col-md-4 mb-3">{{ form.op_state.label }} {{ form.op_state(class="form-control") }}</div>
+    <div class="col-md-2 mb-3">{{ form.op_postcode.label }} {{ form.op_postcode(class="form-control") }}</div>
+    <div class="col-md-2 mb-3">{{ form.op_country.label }} {{ form.op_country(class="form-control") }}</div>
+  </div>
+
+  <!-- Bank Info -->
+  <h5 class="mt-4">Bank Information</h5>
+  <div class="row">
+    <div class="col-md-6 mb-3">{{ form.bank_name.label }} {{ form.bank_name(class="form-control") }}</div>
+    <div class="col-md-6 mb-3">{{ form.bank_account_number.label }} {{ form.bank_account_number(class="form-control") }}</div>
+  </div>
+
+  <!-- Documents -->
+  <h5 class="mt-4">Upload Documents</h5>
+  <div class="row">
+    <div class="col-md-4 mb-3">{{ form.registration_cert.label }} {{ form.registration_cert(class="form-control") }}</div>
+    <div class="col-md-4 mb-3">{{ form.bank_verification_doc.label }} {{ form.bank_verification_doc(class="form-control") }}</div>
+    <div class="col-md-4 mb-3">{{ form.director_id_doc.label }} {{ form.director_id_doc(class="form-control") }}</div>
+  </div>
+
+  <!-- Submit -->
+  <div class="mt-4">
+    <button type="submit" class="btn btn-success">Submit Verification</button>
+  </div>
+</form>
+{% endblock %}

@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+
+# Virtual env & OS cruft
+venv/
+.DS_Store
+
+# Local config & secrets
+.env
+.env.*
+
+# Databases & logs (keep app.db out of git unless you want to demo with preloaded data)
+app.db
+*.sqlite3
+*.log
+
+# Flask instance folder (if you use one)
+instance/
