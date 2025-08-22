@@ -31,6 +31,11 @@ def create_app():
     from .admin import admin  # import the blueprint object
     app.register_blueprint(admin, url_prefix='/admin')  # register the blueprint
 
+    # ✅ health check (use @route for widest compatibility)
+    @app.route("/healthz", methods=["GET"])
+    def healthz():
+        return "ok", 200
+
     @app.context_processor
     def inject_globals():
         return {
