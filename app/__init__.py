@@ -1,7 +1,7 @@
 from flask import Flask
 from .extensions import db, migrate, login_manager
 from datetime import datetime
-from .catalog.cart_utils import cart_count  # adjust import path if needed
+from .cart.cart_utils import cart_count  # adjust import path if needed
 
 
 def create_app():
