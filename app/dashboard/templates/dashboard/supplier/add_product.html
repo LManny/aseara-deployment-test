@@ -4,36 +4,118 @@
 <h3>Add New Product</h3>
 <hr>
 
-<form method="POST" enctype="multipart/form-data">
-    {{ form.hidden_tag() }}
+<form method="POST">
+  {{ form.hidden_tag() }}
 
-    <div class="mb-3">
+  <div class="row">
+    <div class="col-lg-8">
+      <!-- Identity -->
+      <div class="mb-3">
         {{ form.name.label(class="form-label") }}
-        {{ form.name(class="form-control") }}
-    </div>
+        {{ form.name(class="form-control", placeholder="e.g., Premium Dried Mango Slices") }}
+        {% for e in form.name.errors %}<div class="text-danger">{{ e }}</div>{% endfor %}
+      </div>
 
-    <div class="mb-3">
+      <div class="mb-3">
+        {{ form.short_desc.label(class="form-label") }}
+        {{ form.short_desc(class="form-control", placeholder="Short punchy summary for the product card") }}
+        {% for e in form.short_desc.errors %}<div class="text-danger">{{ e }}</div>{% endfor %}
+      </div>
+
+      <div class="mb-3">
         {{ form.description.label(class="form-label") }}
-        {{ form.description(class="form-control", rows="4") }}
+        {{ form.description(class="form-control", rows="6", placeholder="Full description, features, story, usage…") }}
+        {% for e in form.description.errors %}<div class="text-danger">{{ e }}</div>{% endfor %}
+      </div>
+
+      <!-- Classification -->
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          {{ form.category.label(class="form-label") }}
+          {{ form.category(class="form-control", placeholder="Snacks") }}
+          {% for e in form.category.errors %}<div class="text-danger">{{ e }}</div>{% endfor %}
+        </div>
+        <div class="col-md-6 mb-3">
+          {{ form.subcategory.label(class="form-label") }}
+          {{ form.subcategory(class="form-control", placeholder="Dried Fruit") }}
+          {% for e in form.subcategory.errors %}<div class="text-danger">{{ e }}</div>{% endfor %}
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          {{ form.hs_code.label(class="form-label") }}
+          {{ form.hs_code(class="form-control", placeholder="e.g., 0813.50") }}
+          {% for e in form.hs_code.errors %}<div class="text-danger">{{ e }}</div>{% endfor %}
+        </div>
+        <div class="col-md-6 mb-3">
+          {{ form.country_of_origin.label(class="form-label") }}
+          {{ form.country_of_origin(class="form-control", placeholder="MY") }}
+          <div class="form-text">Use ISO-2 code (MY, TH, ID, SG, PH, VN, KH, LA, MM, BN, TL)</div>
+          {% for e in form.country_of_origin.errors %}<div class="text-danger">{{ e }}</div>{% endfor %}
+        </div>
+      </div>
     </div>
 
-    <div class="mb-3">
-        {{ form.price.label(class="form-label") }}
-        {{ form.price(class="form-control") }}
-    </div>
+    <div class="col-lg-4">
+      <!-- Commerce -->
+      <div class="card mb-3">
+        <div class="card-body">
+          <h6 class="card-title">Pricing & Inventory</h6>
 
-    <div class="mb-3">
-        {{ form.stock.label(class="form-label") }}
-        {{ form.stock(class="form-control") }}
-    </div>
+          <div class="row">
+            <div class="col-7 mb-3">
+              {{ form.price.label(class="form-label") }}
+              {{ form.price(class="form-control") }}
+              {% for e in form.price.errors %}<div class="text-danger">{{ e }}</div>{% endfor %}
+            </div>
+            <div class="col-5 mb-3">
+              {{ form.currency.label(class="form-label") }}
+              {{ form.currency(class="form-select") }}
+              {% for e in form.currency.errors %}<div class="text-danger">{{ e }}</div>{% endfor %}
+            </div>
+          </div>
 
-    <div class="mb-3">
-        {{ form.image.label(class="form-label") }}
-        {{ form.image(class="form-control") }}
-    </div>
+          <div class="row">
+            <div class="col-6 mb-3">
+              {{ form.moq.label(class="form-label") }}
+              {{ form.moq(class="form-control") }}
+              {% for e in form.moq.errors %}<div class="text-danger">{{ e }}</div>{% endfor %}
+            </div>
+            <div class="col-6 mb-3">
+              {{ form.stock.label(class="form-label") }}
+              {{ form.stock(class="form-control") }}
+              {% for e in form.stock.errors %}<div class="text-danger">{{ e }}</div>{% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
 
-    <div class="mb-3">
-        {{ form.submit(class="btn btn-success") }}
+      <!-- Logistics -->
+      <div class="card">
+        <div class="card-body">
+          <h6 class="card-title">Logistics</h6>
+          <div class="row">
+            <div class="col-6 mb-3">
+              {{ form.lead_time_days.label(class="form-label") }}
+              {{ form.lead_time_days(class="form-control") }}
+              {% for e in form.lead_time_days.errors %}<div class="text-danger">{{ e }}</div>{% endfor %}
+            </div>
+            <div class="col-6 mb-3">
+              {{ form.incoterms.label(class="form-label") }}
+              {{ form.incoterms(class="form-select") }}
+              {% for e in form.incoterms.errors %}<div class="text-danger">{{ e }}</div>{% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="d-flex gap-2 mt-3">
+    {{ form.save_draft(class="btn btn-outline-secondary") }}
+    {{ form.publish(class="btn btn-success") }}
+  </div>
 </form>
 {% endblock %}

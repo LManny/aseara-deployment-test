@@ -11,9 +11,7 @@ venv/
 .env
 .env.*
 
-# Databases & logs (keep app.db out of git unless you want to demo with preloaded data)
-app.db
-*.sqlite3
+# Databases & logs (keep app.db + *.sqlite3 out of git unless you want to demo with preloaded data)
 *.log
 
 # Flask instance folder (if you use one)

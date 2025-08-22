@@ -1,0 +1,57 @@
+{% extends "admin/base_staff.html" %}
+{% from "_status_badge.html" import status_badge %}
+
+{% block page_title %}Verification Detail{% endblock %}
+
+{% block staff_content %}
+<div class="container-fluid">
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0">{{ supplier.business_name or "Supplier" }}</h3>
+    <a href="{{ url_for('admin.verification_queue') }}" class="btn btn-sm btn-outline-secondary">Back to Queue</a>
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-body">
+      <dl class="row mb-0">
+        <dt class="col-sm-3">Business Name</dt>
+        <dd class="col-sm-9">{{ supplier.business_name or '—' }}</dd>
+
+        <dt class="col-sm-3">Email</dt>
+        <dd class="col-sm-9">{{ supplier.user.email }}</dd>
+
+        <dt class="col-sm-3">Country</dt>
+        <dd class="col-sm-9">{{ supplier.country_code or supplier.reg_country or '—' }}</dd>
+
+        <dt class="col-sm-3">Reg. Number</dt>
+        <dd class="col-sm-9">{{ supplier.company_registration_number or '—' }}</dd>
+
+        <dt class="col-sm-3">Submitted At</dt>
+        <dd class="col-sm-9">
+          {% if supplier.submitted_at %}{{ supplier.submitted_at.strftime('%Y-%m-%d %H:%M') }}{% else %}—{% endif %}
+        </dd>
+
+        <dt class="col-sm-3">Status</dt>
+        <dd class="col-sm-9">{{ status_badge(supplier.status) }}</dd>
+      </dl>
+    </div>
+  </div>
+
+  <!-- Actions via WTForms (CSRF included in hidden_tag) -->
+    <form method="post" class="d-inline">
+    {{ form.hidden_tag() }}
+    {{ form.approve(class="btn btn-success") }}
+    </form>
+
+    <form method="post" class="d-inline">
+    {{ form.hidden_tag() }}
+    {{ form.needs_more_info(class="btn btn-warning") }}
+    </form>
+
+    <form method="post" class="d-inline">
+    {{ form.hidden_tag() }}
+    {{ form.reject(class="btn btn-danger") }}
+    </form>
+
+</div>
+{% endblock %}

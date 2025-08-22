@@ -20,7 +20,17 @@ def login():
         if user and user.check_password(password):
             login_user(user, remember=remember)
             flash("Logged in successfully!", "success")
-            return redirect(url_for('dashboard.user_dashboard'))
+
+            if user.role in ['customer', 'supplier']:
+                return redirect(url_for('dashboard.user_dashboard'))
+            
+            elif user.role == 'admin':
+                return redirect(url_for('admin.dashboard'))
+            
+            else:
+                print("Invalid user role! -- check user")
+
+
         else:
             flash("Invalid email or password", "danger")
 

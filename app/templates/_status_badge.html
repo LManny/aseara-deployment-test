@@ -1,0 +1,16 @@
+{% macro status_badge(status) -%}
+  {% set s = status %}
+  {% if s.name == "APPROVED" %}
+    <span class="badge text-bg-success">Approved</span>
+  {% elif s.name == "UNDER_REVIEW" %}
+    <span class="badge text-bg-info">Under review</span>
+  {% elif s.name == "SUBMITTED" %}
+    <span class="badge text-bg-primary">Submitted</span>
+  {% elif s.name == "NEEDS_MORE_INFO" %}
+    <span class="badge text-bg-warning">Needs more info</span>
+  {% elif s.name == "REJECTED" %}
+    <span class="badge text-bg-danger">Rejected</span>
+  {% else %}
+    <span class="badge text-bg-secondary">Draft</span>
+  {% endif %}
+{%- endmacro %}

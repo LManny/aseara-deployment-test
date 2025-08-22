@@ -51,7 +51,13 @@
     <div class="col-md-4 mb-3">{{ form.reg_city.label }} {{ form.reg_city(class="form-control") }}</div>
     <div class="col-md-4 mb-3">{{ form.reg_state.label }} {{ form.reg_state(class="form-control") }}</div>
     <div class="col-md-2 mb-3">{{ form.reg_postcode.label }} {{ form.reg_postcode(class="form-control") }}</div>
-    <div class="col-md-2 mb-3">{{ form.reg_country.label }} {{ form.reg_country(class="form-control") }}</div>
+    <div class="col-md-6 mb-3">
+        {{ form.reg_country.label(class="form-label") }}
+        {{ form.reg_country(class="form-select") }}
+        {% for error in form.reg_country.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
   </div>
 
   <!-- Operational Address -->
@@ -62,7 +68,13 @@
     <div class="col-md-4 mb-3">{{ form.op_city.label }} {{ form.op_city(class="form-control") }}</div>
     <div class="col-md-4 mb-3">{{ form.op_state.label }} {{ form.op_state(class="form-control") }}</div>
     <div class="col-md-2 mb-3">{{ form.op_postcode.label }} {{ form.op_postcode(class="form-control") }}</div>
-    <div class="col-md-2 mb-3">{{ form.op_country.label }} {{ form.op_country(class="form-control") }}</div>
+    <div class="col-md-6 mb-3">
+        {{ form.op_country.label(class="form-label") }}
+        {{ form.op_country(class="form-select") }}
+        {% for error in form.op_country.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
   </div>
 
   <!-- Bank Info -->

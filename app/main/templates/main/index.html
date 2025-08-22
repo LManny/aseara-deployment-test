@@ -37,12 +37,11 @@
   <div class="row row-cols-2 row-cols-sm-3 row-cols-md-6 g-3 mb-4">
     {% for c in countries %}
     <div class="col">
-      <a class="text-decoration-none" href="{{ url_for('catalog.country', country=c.code) }}">
+      <a class="text-decoration-none" href="{{ url_for('catalog.country', country_code=c.code) }}">
         <div class="card h-100 text-center">
           <div class="card-body">
             <div class="mb-2">
-              <img src="{{ url_for('static', filename='img/flags/' ~ c.code ~ '.svg') }}"
-                   alt="{{ c.name }} flag" style="height:28px">
+              <img src="https://flagcdn.com/{{ c.code|lower }}.svg" alt="{{ c.name }} flag" style="height:28px">
             </div>
             <div class="fw-semibold">{{ c.name }}</div>
           </div>
@@ -74,7 +73,7 @@
   </div>
 
   <!-- Featured products -->
-  <div class="d-flex justify-content-between align-items-center mb-2">
+  <div class="d-flex justify-content_between align-items-center mb-2">
     <h5 class="mb-0">Trending This Week</h5>
     <a href="{{ url_for('catalog.search', sort='newest') }}" class="small text-muted">See more</a>
   </div>
@@ -82,17 +81,21 @@
     {% for p in featured_products %}
     <div class="col">
       <div class="card h-100">
-        {% if p.image_path %}
-          <img src="{{ url_for('static', filename='uploads/products/' ~ p.image_path) }}" class="card-img-top" alt="{{ p.name }}">
+        {% if p.main_image_path %}
+          <img src="{{ url_for('static', filename='uploads/products/' ~ p.main_image_path) }}"
+               class="card-img-top" alt="{{ p.name }}">
         {% endif %}
         <div class="card-body">
-          <h6 class="card-title text-truncate">{{ p.name }}</h6>
-          <div class="small text-muted">{{ (p.supplier.country or '')|title }}</div>
+          <h6 class="card-title text-truncate" title="{{ p.name }}">{{ p.name }}</h6>
+          {# Prefer product.country_of_origin (ISO-2). Fallback to supplier’s reg_country if you have it. #}
+          <div class="small text-muted">
+            {{ p.country_of_origin or (p.supplier.reg_country if p.supplier else '') }}
+          </div>
         </div>
         <div class="card-footer d-flex justify-content-between align-items-center">
-          <span class="fw-semibold">RM {{ '%.2f'|format(p.price) }}</span>
-          <a class="btn btn-sm btn-outline-primary" href="#">View</a>
-          {# Replace '#' with url_for('catalog.product_detail', product_id=p.id) once you add that route #}
+          <span class="fw-semibold">{{ p.currency or 'USD' }} {{ '%.2f'|format(p.price) }}</span>
+          <a class="btn btn-sm btn-outline-primary"
+             href="{{ url_for('catalog.product_detail', product_id=p.id) }}">View</a>
         </div>
       </div>
     </div>

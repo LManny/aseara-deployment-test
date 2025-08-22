@@ -1,5 +1,4 @@
 {% extends "dashboard/supplier/base_dashboard.html" %}
-
 {% block page_title %}My Products{% endblock %}
 
 {% block dashboard_content %}
@@ -39,31 +38,40 @@
             {% if p.description %}{{ p.description[:70] }}{% if p.description|length > 70 %}…{% endif %}{% else %}<em>No description</em>{% endif %}
           </div>
         </td>
-        <td class="text-end">RM {{ '%.2f'|format(p.price) }}</td>
+
+        <td class="text-end">{{ p.currency }} {{ '%.2f'|format(p.price) }}</td>
         <td class="text-end">{{ p.stock }}</td>
+
         <td>
-          {% if p.is_active %}
+          {# status badge from enum #}
+          {% if p.status.value == 'live' %}
             <span class="badge bg-success">Live</span>
+          {% elif p.status.value == 'draft' %}
+            <span class="badge bg-secondary">Draft</span>
+          {% elif p.status.value == 'paused' %}
+            <span class="badge bg-warning text-dark">Paused</span>
+          {% elif p.status.value == 'pending_review' %}
+            <span class="badge bg-info text-dark">Pending Review</span>
           {% else %}
-            {% if current_user.supplier.is_verified %}
-              <span class="badge bg-secondary">Unpublished</span>
-            {% else %}
-              <span class="badge bg-warning text-dark">Pending Verification</span>
-            {% endif %}
+            <span class="badge bg-light text-dark">{{ p.status.value|capitalize }}</span>
           {% endif %}
         </td>
-        <td>{{ p.date_added.strftime('%Y-%m-%d') if p.date_added }}</td>
+
+        <td>{{ p.created_at.strftime('%Y-%m-%d') if p.created_at }}</td>
+
         <td class="text-end">
           <div class="d-inline-flex gap-2">
             <a href="#" class="btn btn-outline-success btn-sm disabled" title="Edit (coming soon)">Edit</a>
 
             <form method="POST" action="{{ url_for('dashboard.supplier_product_toggle', product_id=p.id) }}" class="d-inline">
-              <button type="submit" class="btn btn-sm {% if p.is_active %}btn-outline-secondary{% else %}btn-success{% endif %}">
-                {% if p.is_active %}Unpublish{% else %}Publish{% endif %}
+              <button type="submit"
+                      class="btn btn-sm {% if p.status.value == 'live' %}btn-outline-secondary{% else %}btn-success{% endif %}">
+                {% if p.status.value == 'live' %}Unpublish{% else %}Publish{% endif %}
               </button>
             </form>
 
-            <form method="POST" action="{{ url_for('dashboard.supplier_product_delete', product_id=p.id) }}" class="d-inline"
+            <form method="POST" action="{{ url_for('dashboard.supplier_product_delete', product_id=p.id) }}"
+                  class="d-inline"
                   onsubmit="return confirm('Delete this product? This cannot be undone.');">
               <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
             </form>
@@ -88,5 +96,4 @@
   </ul>
 </nav>
 {% endif %}
-
 {% endblock %}

@@ -1,5 +1,7 @@
 from flask import Flask
 from .extensions import db, migrate, login_manager
+from datetime import datetime
+from .catalog.cart_utils import cart_count  # adjust import path if needed
 
 
 def create_app():
@@ -23,11 +25,18 @@ def create_app():
     from .catalog import catalog  # import the blueprint object
     app.register_blueprint(catalog, url_prefix='/catalog')  # register the blueprint
 
-    # Add health check route here ⬇
-    @app.get("/healthz")
-    def healthz():
-        return {"status": "ok"}, 200
+    from .cart import cart  # import the blueprint object
+    app.register_blueprint(cart, url_prefix='/cart')  # register the blueprint
 
+    from .admin import admin  # import the blueprint object
+    app.register_blueprint(admin, url_prefix='/admin')  # register the blueprint
+
+    @app.context_processor
+    def inject_globals():
+        return {
+            "cart_items_count": cart_count(),                # badge number
+            "current_year": datetime.utcnow().year,          # footer year
+        }
 
     return app
 

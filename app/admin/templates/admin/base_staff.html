@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block page_title %}Admin – {{ super() }}{% endblock %}
+
+{% block page_body %}
+<div class="container-fluid">
+  <div class="row">
+    <!-- Left rail -->
+    <aside class="col-md-3 col-xl-2 border-end min-vh-100 py-3">
+      <div class="px-3 mb-4">
+        <div class="h5 mb-0">ASEARA Admin</div>
+        <small class="text-muted">
+          {{ current_user.first_name }} {{ current_user.last_name }} • {{ current_user.role|replace('_',' ')|title }}
+          {% if current_user.country %} ({{ current_user.country }}){% endif %}
+        </small>
+      </div>
+
+      <nav class="list-group list-group-flush">
+        <a class="list-group-item list-group-item-action {% if request.endpoint == 'admin.dashboard' %}active{% endif %}"
+           href="{{ url_for('admin.dashboard') }}">Dashboard</a>
+
+        <!-- Placeholder links (safe even if routes don’t exist yet) -->
+        <a class="list-group-item list-group-item-action" href="#">Suppliers</a>
+        <a class="list-group-item list-group-item-action" href="{{ url_for('admin.verification_queue') }}">Verification Queue</a>
+        <a class="list-group-item list-group-item-action" href="#">Products</a>
+        <a class="list-group-item list-group-item-action" href="#">Orders</a>
+        <a class="list-group-item list-group-item-action" href="#">Reports</a>
+
+        <div class="list-group-item bg-body-tertiary"></div>
+
+        <a class="list-group-item list-group-item-action" href="#">Admin Users</a>
+        <a class="list-group-item list-group-item-action" href="#">Settings</a>
+        <a class="list-group-item list-group-item-action" href="{{ url_for('auth.logout') }}">Logout</a>
+      </nav>
+    </aside>
+
+    <!-- Main content -->
+    <main class="col-md-9 col-xl-10 py-4">
+      {% block staff_content %}{% endblock %}
+    </main>
+  </div>
+</div>
+{% endblock %}

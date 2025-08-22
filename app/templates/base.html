@@ -11,57 +11,105 @@
 
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{{ url_for('main.index') }}">ASEARA</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
-            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <!-- Brand -->
+            <a class="navbar-brand fw-semibold" href="{{ url_for('main.index') }}">ASEARA</a>
+
+            <!-- Mobile toggle -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+                    aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
             </button>
 
-            <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.index') }}">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Products</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Cart</a>
-                    </li>
-                </ul>
+            <!-- Nav content -->
+            <div class="collapse navbar-collapse" id="mainNav">
 
-                <ul class="navbar-nav">
-                    {% if current_user.is_authenticated %}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                                {{ current_user.first_name }} ({{ current_user.role|capitalize }})
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li>
-                                    <a class="dropdown-item" href="{{
-                                        url_for('dashboard.customer_dashboard') if current_user.role == 'customer'
-                                        else url_for('dashboard.supplier_dashboard')
-                                    }}">
-                                        Dashboard
-                                    </a>
-                                </li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a></li>
-                            </ul>
+            <!-- Left: Countries dropdown (optional) -->
+            <ul class="navbar-nav me-3">
+                <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="countriesMenu" role="button" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    Countries
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="countriesMenu" style="max-height: 50vh; overflow:auto;">
+                    <!-- If you injected COUNTRIES globally (see below), list them -->
+                    {% if COUNTRIES %}
+                    {% for c in COUNTRIES %}
+                        <li>
+                        <a class="dropdown-item" href="{{ url_for('catalog.country', country_code=c.code) }}">
+                            {{ c.flag if c.flag is defined else '' }} {{ c.name }}
+                        </a>
                         </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('auth.login') }}">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('auth.register') }}">Register</a>
-                        </li>
+                    {% endfor %}
+                    <li><hr class="dropdown-divider"></li>
                     {% endif %}
+                    <li><a class="dropdown-item" href="{{ url_for('catalog.search') }}">View all products</a></li>
                 </ul>
+                </li>
+            </ul>
+
+            <!-- Center: Search -->
+            <form class="d-flex flex-grow-1 me-3" role="search" action="{{ url_for('catalog.search') }}" method="get">
+                <div class="input-group">
+                <input class="form-control" type="search" name="q"
+                        placeholder="Search products (e.g., “batik”, “dried mango”)" aria-label="Search"
+                        value="{{ request.args.get('q','') }}">
+                {% if COUNTRIES %}
+                    <select class="form-select d-none d-md-block" name="country" style="max-width: 180px;">
+                    <option value="">All countries</option>
+                    {% for c in COUNTRIES %}
+                        <option value="{{ c.code }}" {{ 'selected' if request.args.get('country') == c.code else '' }}>
+                        {{ c.name }}
+                        </option>
+                    {% endfor %}
+                    </select>
+                {% endif %}
+                <button class="btn btn-primary" type="submit">Search</button>
+                </div>
+            </form>
+
+            <!-- Right: Cart + Account -->
+            <ul class="navbar-nav ms-auto align-items-lg-center">
+
+                <!-- Cart -->
+                <li class="nav-item me-2">
+                <a class="nav-link position-relative" href="{{ url_for('cart.view') }}">
+                🛒 Cart
+                {% if cart_count and cart_count > 0 %}
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
+                    {{ cart_count }}
+                    <span class="visually-hidden">items in cart</span>
+                    </span>
+                {% endif %}
+                </a>
+                </li>
+
+                <!-- Account -->
+                {% if current_user.is_authenticated %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    {{ current_user.first_name }} ({{ current_user.role|capitalize }})
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        {% set endpoints = {
+                        'customer': 'dashboard.customer_dashboard',
+                        'supplier': 'dashboard.supplier_dashboard',
+                        'admin':    'admin.dashboard'
+                        } %}
+                        <a class="dropdown-item" href="{{ url_for(endpoints.get(current_user.role, 'main.index')) }}">
+                        Dashboard
+                        </a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a></li>
+                    </ul>
+                </li>
+                {% else %}
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}">Login</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.register') }}">Register</a></li>
+                {% endif %}
+            </ul>
             </div>
         </div>
     </nav>

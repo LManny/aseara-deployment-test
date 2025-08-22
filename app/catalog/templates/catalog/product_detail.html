@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block page_title %}{{ product.name }} – ASEARA{% endblock %}
+
+{% block page_body %}
+<div class="container mt-4">
+
+  <!-- Breadcrumbs (lightweight) -->
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb small">
+      <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+      <li class="breadcrumb-item">
+        <a href="#">{{ product.country_of_origin or '—' }}</a>
+      </li>
+      <li class="breadcrumb-item">
+        <a href="#">{{ product.category or 'Category' }}</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+    </ol>
+  </nav>
+
+  <div class="row g-4">
+    <!-- Image -->
+    <div class="col-md-5">
+      <div class="card">
+        {% if product.main_image_path %}
+          <img
+            src="{{ url_for('static', filename='uploads/products/' ~ product.main_image_path) }}"
+            class="card-img-top" alt="{{ product.name }}">
+        {% else %}
+          <div class="ratio ratio-1x1 bg-light d-flex align-items-center justify-content-center">
+            <span class="text-muted">No image</span>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Info + Add to Cart -->
+    <div class="col-md-7">
+      <h3 class="mb-1">{{ product.name }}</h3>
+      <div class="text-muted mb-2">
+        {{ product.supplier.business_name if product.supplier else '—' }}
+        {% if product.country_of_origin %} • {{ product.country_of_origin }}{% endif %}
+      </div>
+
+      {% if product.short_desc %}
+        <p class="lead">{{ product.short_desc }}</p>
+      {% endif %}
+
+      <div class="d-flex align-items-center gap-3 mb-3">
+        <div class="h4 mb-0">{{ product.currency }} {{ '%.2f'|format(product.price) }}</div>
+        {% if product.moq and product.moq > 1 %}
+          <span class="badge text-bg-light">MOQ {{ product.moq }}</span>
+        {% endif %}
+        {% if product.stock is not none %}
+          <span class="badge {{ 'text-bg-success' if product.stock > 0 else 'text-bg-secondary' }}">
+            {{ product.stock }} in stock
+          </span>
+        {% endif %}
+      </div>
+
+      <form method="POST" class="mb-3">
+        {{ form.hidden_tag() }}
+        {{ form.product_id(value=product.id) }}
+        <div class="row g-2 align-items-end">
+          <div class="col-4 col-sm-3 col-md-3">
+            <label class="form-label">{{ form.quantity.label.text }}</label>
+            {{ form.quantity(class="form-control", min=product.moq or 1, value=product.moq or 1) }}
+            {% for e in form.quantity.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+          </div>
+          <div class="col-8 col-sm-5 col-md-4 d-grid">
+            {{ form.add(class="btn btn-success btn-lg", disabled=(product.stock is not none and product.stock <= 0)) }}
+          </div>
+        </div>
+      </form>
+
+      {% if product.description %}
+        <div class="mt-4">
+          <h6>Description</h6>
+          <p class="mb-0">{{ product.description }}</p>
+        </div>
+      {% endif %}
+
+      <div class="mt-4">
+        <h6>Details</h6>
+        <ul class="small text-muted mb-0">
+          {% if product.hs_code %}<li>HS Code: {{ product.hs_code }}</li>{% endif %}
+          {% if product.incoterms %}<li>Incoterms: {{ product.incoterms }}</li>{% endif %}
+          {% if product.lead_time_days %}<li>Lead time: {{ product.lead_time_days }} days</li>{% endif %}
+          {% if product.category %}<li>Category: {{ product.category }}{% if product.subcategory %} / {{ product.subcategory }}{% endif %}</li>{% endif %}
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

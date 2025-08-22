@@ -1,4 +1,6 @@
 {% extends "dashboard/supplier/base_dashboard.html" %}
+{% from "_status_badge.html" import status_badge %}
+
 {% set active_page = 'dashboard' %}
 
 {% block page_title %}Supplier Dashboard{% endblock %}
@@ -11,13 +13,7 @@
     <div class="card">
       <div class="card-body">
         <h5 class="card-title">Verification Status</h5>
-        <p class="card-text">
-          {% if current_user.supplier.is_verified %}
-            Verified ✅
-          {% else %}
-            Not Verified ❌
-          {% endif %}
-        </p>
+        <p class="card-text">{{ status_badge(current_user.supplier.status) }}</p>
         <a href="#" class="btn btn-outline-success btn-sm">View Details</a>
       </div>
     </div>

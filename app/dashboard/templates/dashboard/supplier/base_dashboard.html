@@ -30,7 +30,7 @@
       {% endif %}
 
       <!-- Verification Banner -->
-      {% if not current_user.supplier.profile_complete %}
+      {% if current_user.supplier.status.name == "DRAFT" %}
       <div class="alert alert-warning d-flex justify-content-between align-items-center" role="alert">
         <div>
           <strong>Your profile is incomplete.</strong> Please complete your verification to start selling.

@@ -1,5 +1,5 @@
 from flask import render_template
-from app.models import Product
+from app.models import Product, ProductStatus
 from . import main #this imports that main blueprint from __init__.py
 
 
@@ -9,12 +9,12 @@ def index():
     # Do some stuff
 
     countries = [
-    {'code':'thailand','name':'Thailand'},
-    {'code':'vietnam','name':'Vietnam'},
-    {'code':'indonesia','name':'Indonesia'},
-    {'code':'malaysia','name':'Malaysia'},
-    {'code':'philippines','name':'Philippines'},
-    {'code':'singapore','name':'Singapore'},
+    {'code':'TH','name':'Thailand'},
+    {'code':'VN','name':'Vietnam'},
+    {'code':'ID','name':'Indonesia'},
+    {'code':'MY','name':'Malaysia'},
+    {'code':'PH','name':'Philippines'},
+    {'code':'SG','name':'Singapore'},
     ]
 
     categories = [
@@ -25,5 +25,5 @@ def index():
     {'slug':'crafts','name':'Crafts','emoji':'🧵'},
     {'slug':'coffee-tea','name':'Coffee & Tea','emoji':'☕'},
     ]
-    featured_products = Product.query.filter_by(is_active=True).order_by(Product.date_added.desc()).limit(8).all()
+    featured_products = Product.query.filter_by(status=ProductStatus.LIVE).order_by(Product.created_at.desc()).limit(8).all()
     return render_template('main/index.html', countries=countries, categories=categories, featured_products=featured_products)

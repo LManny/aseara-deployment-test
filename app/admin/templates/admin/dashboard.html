@@ -1,0 +1,76 @@
+{% extends "admin/base_staff.html" %}
+
+{% block page_title %}Admin Dashboard{% endblock %}
+
+{% block staff_content %}
+<div class="container-fluid">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0">Dashboard</h3>
+    <div class="text-muted small">Welcome back, {{ current_user.first_name }}.</div>
+  </div>
+
+  <!-- Metric cards (placeholders) -->
+  <div class="row g-3 mb-3">
+    <div class="col-sm-6 col-lg-3">
+      <div class="card h-100">
+        <div class="card-body">
+          <div class="text-muted small">Pending Verifications</div>
+          <div class="display-6">—</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+      <div class="card h-100">
+        <div class="card-body">
+          <div class="text-muted small">Total Suppliers</div>
+          <div class="display-6">—</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+      <div class="card h-100">
+        <div class="card-body">
+          <div class="text-muted small">Products Live</div>
+          <div class="display-6">—</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+      <div class="card h-100">
+        <div class="card-body">
+          <div class="text-muted small">Orders (7d)</div>
+          <div class="display-6">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Two-column section -->
+  <div class="row g-3">
+    <div class="col-lg-7">
+      <div class="card h-100">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <strong>Verification Queue</strong>
+          <a href="#" class="btn btn-sm btn-outline-primary">View All</a>
+        </div>
+        <div class="card-body">
+          <div class="text-muted">No data yet. Once suppliers submit verification, they’ll appear here.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-5">
+      <div class="card h-100">
+        <div class="card-header"><strong>System Notices</strong></div>
+        <div class="card-body">
+          <ul class="mb-0">
+            <li class="text-muted">You’re viewing a demo admin dashboard.</li>
+            <li class="text-muted">Add metrics when your models/routes are ready.</li>
+            <li class="text-muted">Use the left menu to navigate.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

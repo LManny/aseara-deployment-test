@@ -1,0 +1,98 @@
+{# templates/catalog/cart.html #}
+{% extends "base.html" %}
+{% block page_title %}Your Cart – ASEARA{% endblock %}
+
+{% block page_body %}
+<div class="container mt-4">
+  <h3 class="mb-3">Your Cart</h3>
+  {% if not items %}
+    <div class="alert alert-light border">Your cart is empty.</div>
+    <a class="btn btn-primary" href="{{ url_for('main.index') }}">Continue shopping</a>
+    {# endblock #}
+    {# return #}
+  {% endif %}
+
+  <form method="POST" class="mb-3">
+    <input type="hidden" name="action" value="update">
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Product</th>
+            <th class="text-end">Price</th>
+            <th style="width: 130px;">Qty</th>
+            <th class="text-end">Total</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for row in items %}
+          {% set p = row.product %}
+          <tr>
+            <td>
+              <div class="d-flex align-items-center">
+                <div class="me-3" style="width:64px; height:64px;">
+                  {% if p.main_image_path %}
+                    <img src="{{ url_for('static', filename='uploads/products/' ~ p.main_image_path) }}"
+                         class="img-fluid rounded" alt="{{ p.name }}">
+                  {% else %}
+                    <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width:64px;height:64px;">
+                      <span class="text-muted small">No image</span>
+                    </div>
+                  {% endif %}
+                </div>
+                <div>
+                  <a href="{{ url_for('catalog.product_detail', product_id=p.id) }}" class="fw-semibold text-decoration-none">
+                    {{ p.name }}
+                  </a>
+                  <div class="text-muted small">
+                    {% if p.moq and p.moq > 1 %}MOQ {{ p.moq }} • {% endif %}
+                    {{ p.currency }}
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td class="text-end">{{ p.currency }} {{ '%.2f'|format(p.price) }}</td>
+            <td>
+              <input type="number" class="form-control form-control-sm"
+                     name="qty-{{ p.id }}" min="{{ p.moq or 1 }}" value="{{ row.qty }}">
+            </td>
+            <td class="text-end">{{ p.currency }} {{ '%.2f'|format(row.line_total) }}</td>
+            <td class="text-end">
+              <form method="POST" class="d-inline">
+                <input type="hidden" name="action" value="remove">
+                <input type="hidden" name="product_id" value="{{ p.id }}">
+                <button class="btn btn-sm btn-outline-danger">Remove</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="d-flex gap-2">
+        <a class="btn btn-outline-secondary" href="{{ url_for('main.index') }}">Continue shopping</a>
+        <button class="btn btn-outline-primary" type="submit">Update quantities</button>
+      </div>
+
+      <div class="text-end">
+        <div class="fs-5">Subtotal: <strong>{{ items[0].product.currency if items else 'USD' }} {{ '%.2f'|format(totals.subtotal) }}</strong></div>
+        <div class="text-muted small">Shipping, duties, and taxes calculated at checkout.</div>
+      </div>
+    </div>
+  </form>
+
+  <form method="POST">
+    <input type="hidden" name="action" value="clear">
+    <button class="btn btn-outline-danger btn-sm" type="submit">Clear cart</button>
+  </form>
+
+  <hr class="my-4">
+
+  <div class="d-flex justify-content-end">
+    <a class="btn btn-success btn-lg disabled" href="#">Proceed to checkout (coming soon)</a>
+  </div>
+</div>
+{% endblock %}

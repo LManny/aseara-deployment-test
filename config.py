@@ -9,6 +9,9 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     PERMANENT_SESSION_LIFETIME = timedelta(days = 1) #Arbitrary session hold selection
 
+    CUSTOMER_COUNTRIES = ('BN', 'KH', 'ID', 'LA', 'MY', 'MM', 'PH', 'SG', 'TH', 'VN') # Adjust shipping destinations accordingly
+    SUPPLIER_COUNTRIES = ('BN', 'KH', 'ID', 'LA', 'MY', 'MM', 'PH', 'SG', 'TH', 'VN') # Remove relevant countries accordingly
+
     # @app.route('/login', methods=['POST'])
     # def login():
     #     # after validating credentials
