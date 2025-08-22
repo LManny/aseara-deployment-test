@@ -7,7 +7,7 @@ from app.models import Product, ProductStatus, Supplier, SupplierStatus
 from flask_login import login_required, current_user
 
 from .form import AddToCartForm
-from cart.cart_utils import add_to_cart, cart_items_with_products, update_qty, remove_item, clear_cart
+from app.cart.cart_utils import add_to_cart, cart_items_with_products, update_qty, remove_item, clear_cart
 
 from sqlalchemy import or_, and_, func
 
